@@ -1,0 +1,112 @@
+@font-face {
+  font-family: 'Eurostile';
+  src:  url('eurostile-lt-std.woff') format('woff'),url('eurostile-lt-std-oblique_16312.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html body{
+  font-family: EurostileNext,Eurostile,Eurostile LT Std,Arial,Verdana,san-serif;
+}
+
+.L-Header{
+  background: #000;
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  height: 56px;
+}
+.Dbrand-logo{
+  height: 22px;
+  padding:0 30px;
+}
+.Header-Icons{
+  width: 23px;
+  padding-top: 5px;
+}
+
+.Product-Title{
+  margin: 0 auto;
+  padding: 0 8%;
+  background: #dbdbdd;
+  font-size: 1em;;
+}
+
+.inner{
+  display: block;
+  margin: 0 auto;
+  padding: .3em 0;
+  text-align: center;
+  font-size: 2.1em;
+  font-weight: 100;
+  color: #222;
+}
+
+.Phone-Base{
+  width:375px;
+  height:667px;
+  border: #111111 solid 15px;
+  border-top-width: 25px;
+  border-bottom-width: 35px;
+  border-radius: 25px;
+}
+.Phone-Base::before {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 5px;
+  position: absolute;
+  top: 25px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #242424;
+  border-radius: 10px;
+}
+
+.Phone-Border{
+  background-image: linear-gradient(to bottom right, #000, #ffcc00);
+  height: 100vh;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.App {
+  text-align: center;
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+.App::-webkit-scrollbar { width: 0 !important }
+.App{ 
+  overflow: -moz-scrollbars-none; 
+  -ms-overflow-style: none;
+}
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 40vmin;
+}
+
+.App-header {
+  height: 100%;
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
