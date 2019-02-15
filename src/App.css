@@ -32,17 +32,236 @@ html body{
   font-size: 1em;;
 }
 
-.inner{
+.Product-Title .inner{
   display: block;
   margin: 0 auto;
-  padding: .3em 0;
+  padding: .4em 0;
   text-align: center;
-  font-size: 2.1em;
+  font-size: 1.8em;
   font-weight: 100;
   color: #222;
 }
 
+.Phone-Picker::before{
+  content: "";
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 1em 2em 0;
+  border-color: transparent;
+  -webkit-transform: rotate(1turn);
+  position: absolute;
+  top: 0%;
+  left: 50%;
+  margin-left: -2em;    
+  border-color: #dbdbdb transparent transparent;
+}
+
+.Inner-Phone-Image{
+  z-index: 10;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 90%;
+  -webkit-filter: drop-shadow(5px 5px 5px #000);
+  filter: drop-shadow(0px 15px 10px #000);
+}
+.Phone-Picker{
+  position: relative;
+  background: #0c0c0c; 
+}
+.Sidebar{
+  left: 0;
+  height:100%;
+  position: absolute;
+  margin-left:45%;
+  width: 55%;
+  z-index: 3;
+  background: #ffbb00;
+  transform:  translateX(calc(100% + 100px));
+  transition: all 400ms;
+}
+.Sidebar-Triangle{
+  position: absolute;
+  left:-75px;
+  content: "";
+  border-style: solid;
+  border-width: 0 0 667px 75px;
+  border-color: transparent transparent #ffbb00 transparent;
+}
+.Sidebar.Active{
+  transform:  translateX(0%);
+}
+.Skin-Catagories{
+  position: absolute;
+  right: 15px;
+  bottom: 0;
+  width:100%;
+  height: 55%;
+  overflow-y: scroll;
+  overflow: -moz-scrollbars-none;  
+  -ms-overflow-style: none;
+}
+.Catagories-Overlay{
+  content: "";
+  position: absolute;
+  z-index: 1;
+  height: 55%;
+  right: 15px;
+  bottom: 0px;
+  pointer-events: none;
+  width: 100%;
+  background-image: linear-gradient( #ffbb00, rgba(255,255,255,0) 10%);
+}
+
+.Skin-Catagories::-webkit-scrollbar { width: 0 !important }
+.Catagories-Padding{
+  margin: 50% 0 50% 0;
+}
+.Catagory-Wrapper h5{
+  margin: 10px 0 0 0;
+
+}
+.Catagory{
+  display: flex;
+  flex-wrap: wrap;
+  
+}
+
+.Skin-Button{
+  margin: 7px 10px;
+  width:40px;
+  height:40px;
+  background-repeat: repeat;
+  background-position: center;
+  border: solid #dbdbdb 1.5px;
+  border-radius: 50%;
+  -webkit-filter: drop-shadow(5px 5px 5px #000);
+  filter: drop-shadow(1px 2px 1px rgba(0, 0, 0, .65));
+  transition: 200ms all;
+}
+
+.Skin-Button:hover{
+  width: 44px;
+  height: 44px;
+  margin: 5px 8px
+}
+
+.Skin-Button.active{
+  width: 40px;
+  height: 40px;
+  margin: 7px 10px
+}
+.Button-Wrapper{
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+.Catagory-Content{
+  display:inline-flex;
+  flex-wrap: wrap;
+}
+.Circle-Select{
+  position: absolute;
+  height: 70px;
+  width: 70px;
+  pointer-events: none;
+  border-radius: 50%;
+  border: solid 5px #FAFAFAFA;
+  box-shadow: 0 0 10px 5px rgba(250,250,250,.75) inset;
+  opacity: 0;
+  transition: 100ms all;
+}
+
+.Circle-Select.Active{
+  height: 60px;
+  width: 60px;
+  border: solid 2px #FAFAFAFA;
+}
+
+.Product-Options{
+  padding: 1.2em 8%;
+  background: #222222;
+}
+
+.Button{
+  font-size: 1.2em;
+  background: #ffbb00;
+  padding: .8em 1.6em;
+  line-height: 1.4em;
+  font-weight: 600;
+  text-align: center;
+  transition: 150ms all;
+}
+.Button:hover{
+  background: #000000;
+  cursor: pointer;
+  color: #ffbb00;
+}
+
+.Product-Options .Label{
+  position: relative;
+  
+  margin: 0;
+  border: 0;
+  padding: 0 .6em .5em;
+  font-size: .9em;
+  font-weight: 200;
+  text-transform: lowercase;
+  letter-spacing: .05em;
+  color: #a0a0a2;
+}
+.Product-Options .Label::before{
+  content: "";
+  position: absolute;
+  top: .5em;
+  left: 1em;
+  width: 28%;
+  height: .4em;
+  border-width: .1em;
+  border-style: solid none none solid;
+  border-color: #3b3b3b;
+  background: none;
+}
+.Product-Options .Label::after{
+  
+  content: "";
+  position: absolute;
+  top: .5em;
+  width: 28%;
+  height: .4em;
+  border-width: .1em;
+  border-color: #3b3b3b;
+  background: none;
+
+  left: auto;
+  right: 1em;
+  border-style: solid solid none none;
+}
+
+/*Inner phone is for the image of the phone inside the virtual phone*/
+.Inner-Phone{
+  z-index: 4;
+  position: absolute;
+  padding: 1.7em 8%;
+  transition: all 400ms;
+}
+.Inner-Phone.Active{
+  padding: 0em 30%;
+  transform:translate(0,-25%);
+}
+
+.Phone-Wrapper{
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
 .Phone-Base{
+  position: relative;
   width:375px;
   height:667px;
   border: #111111 solid 15px;
@@ -56,7 +275,7 @@ html body{
   width: 60px;
   height: 5px;
   position: absolute;
-  top: 25px;
+  top: -10px;
   left: 50%;
   transform: translate(-50%, -50%);
   background: #242424;
@@ -64,7 +283,7 @@ html body{
 }
 
 .Phone-Border{
-  background-image: linear-gradient(to bottom right, #000, #ffcc00);
+  background-image: linear-gradient(to bottom right, #191b1b, #414345);
   height: 100vh;
   display:flex;
   justify-content: center;
@@ -72,14 +291,16 @@ html body{
 }
 
 .App {
+  position: relative;
   text-align: center;
   height: 100%;
   overflow-y: scroll;
   overflow-x: hidden;
+  
 }
 .App::-webkit-scrollbar { width: 0 !important }
 .App{ 
-  overflow: -moz-scrollbars-none; 
+  overflow: -moz-scrollbars-none;  
   -ms-overflow-style: none;
 }
 .App-logo {
@@ -98,15 +319,20 @@ html body{
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.Page-Overlay{
+  position: absolute;
+  z-index: -1;
+  opacity: 0;
+  background:rgb(0,0,0);
+  ;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  transition: 500ms all;
 }
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.Page-Overlay.Active{
+  cursor: pointer;
+  opacity: .5;
+  z-index: 2;
 }
