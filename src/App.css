@@ -74,20 +74,22 @@ html body{
   left: 0;
   height:100%;
   position: absolute;
-  margin-left:45%;
-  width: 55%;
+  margin-left:60%;
+  width: 40%;
   z-index: 3;
   background: #ffbb00;
-  transform:  translateX(calc(100% + 100px));
-  transition: all 400ms;
+  transform:  translateX(calc(100% + 150px));
+  transition: all 500ms;
+  transition-timing-function: cubic-bezier(.62,.28,.23,.99);
 }
 .Sidebar-Triangle{
   position: absolute;
-  left:-75px;
+  left:-150px;
   content: "";
   border-style: solid;
-  border-width: 0 0 667px 75px;
+  border-width: 0 0 667px 150px;
   border-color: transparent transparent #ffbb00 transparent;
+  pointer-events: none;
 }
 .Sidebar.Active{
   transform:  translateX(0%);
@@ -96,27 +98,26 @@ html body{
   position: absolute;
   right: 15px;
   bottom: 0;
-  width:100%;
-  height: 55%;
+  width:130%;
+  height: 50%;
   overflow-y: scroll;
-  overflow: -moz-scrollbars-none;  
   -ms-overflow-style: none;
 }
 .Catagories-Overlay{
   content: "";
   position: absolute;
   z-index: 1;
-  height: 55%;
+  height: 50%;
   right: 15px;
   bottom: 0px;
   pointer-events: none;
-  width: 100%;
+  width: 130%;
   background-image: linear-gradient( #ffbb00, rgba(255,255,255,0) 10%);
 }
 
 .Skin-Catagories::-webkit-scrollbar { width: 0 !important }
 .Catagories-Padding{
-  margin: 50% 0 50% 0;
+  margin: 30px 0 50% 0;
 }
 .Catagory-Wrapper h5{
   margin: 10px 0 0 0;
@@ -126,6 +127,20 @@ html body{
   display: flex;
   flex-wrap: wrap;
   
+}
+input[type="radio"] {
+  opacity: 0;
+  position: absolute;
+  left: -9999px
+}
+
+input[type="radio"]:checked ~ div {
+  z-index: 0;
+  opacity: 1;
+  height: 54px;
+  width: 54px;
+  border: solid 2px #FAFAFAFA;
+  box-shadow: 0 0 6px 5px rgba(250,250,250,.75) inset;
 }
 
 .Skin-Button{
@@ -147,7 +162,7 @@ html body{
   margin: 5px 8px
 }
 
-.Skin-Button.active{
+.Skin-Button.active,.Skin-Button.active:hover{
   width: 40px;
   height: 40px;
   margin: 7px 10px
@@ -165,21 +180,16 @@ html body{
 }
 .Circle-Select{
   position: absolute;
-  height: 70px;
-  width: 70px;
+  height: 0px;
+  width: 0px;
   pointer-events: none;
   border-radius: 50%;
-  border: solid 5px #FAFAFAFA;
-  box-shadow: 0 0 10px 5px rgba(250,250,250,.75) inset;
+  border: solid 1px #FAFAFAFA;
   opacity: 0;
-  transition: 100ms all;
+  transition: 300ms all;
+  transition-timing-function: cubic-bezier(.86,.16,.12,1.07);
 }
 
-.Circle-Select.Active{
-  height: 60px;
-  width: 60px;
-  border: solid 2px #FAFAFAFA;
-}
 
 .Product-Options{
   padding: 1.2em 8%;
@@ -245,11 +255,16 @@ html body{
 .Inner-Phone{
   z-index: 4;
   position: absolute;
-  padding: 1.7em 8%;
-  transition: all 400ms;
+  padding: 1.7em 0;
+  width:84%;
+  left:calc(8%);
+  transition: all 500ms;
+  transition-timing-function: cubic-bezier(.62,.28,.23,.99);
 }
 .Inner-Phone.Active{
-  padding: 0em 30%;
+  padding: 0em;
+  left: 30%;
+  width: 40%;
   transform:translate(0,-25%);
 }
 
@@ -260,6 +275,26 @@ html body{
   width: 100%;
 }
 
+.Phone-Image-Wrapper{
+  position: relative;
+}
+
+.Phone-Skin{
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100%; 
+  overflow: hidden;
+}
+.Phone-Skin-Image{
+  width: 90%;
+  margin: auto;
+  transition: 400ms all;
+}
+.Phone-Skin-Image-Prev{
+  width: 90%;
+  margin: auto;
+}
 .Phone-Base{
   position: relative;
   width:375px;

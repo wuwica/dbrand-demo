@@ -113,13 +113,17 @@ class Title extends Component{
 }
 
 class Catagories extends Component{
+  constructor(props){
+    super(props);
+  }
+
   render(){
     return(
       <div className="Skin-Catagories">
         <div className="Catagories-Padding">
           {this.props.skinMapping.map((catagory,i) => {
             return(
-              <Catagory key={i} skins={catagory}/>
+              <Catagory key={i} clickSkin={this.props.clickSkin} skins={catagory}/>
             );
           })}
         </div>
@@ -130,6 +134,10 @@ class Catagories extends Component{
 }
 
 class Catagory extends Component{
+  constructor(props){
+    super(props);
+  }
+
   render(){
     return(
       <div className="Catagory-Wrapper">
@@ -138,7 +146,7 @@ class Catagory extends Component{
           <div className={"Catagory-Content"}>
             {this.props.skins.skins.map((skin,i) => {
               return(
-                <Skin_Button key={i} skin={skin}/>
+                <Skin_Button key={i} clickSkin={this.props.clickSkin} skin={skin}/>
               );
             })}
           </div>
@@ -149,14 +157,22 @@ class Catagory extends Component{
 }
 
 class Skin_Button extends Component{
+  constructor(props){
+    super(props);
+  }
+  
+  click = () => {
+    this.props.clickSkin(this.props.skin);
+  }
+
   render(){
-    //
     const skinImage = require("./tiles/"+this.props.skin.fileName);
     return(
       <div className={"Button-Wrapper"}>
-        <div className="Skin-Button" style={{backgroundImage: "url(" + skinImage+ ")"}}>
-        </div>  
-        <div className={"Circle-Select"}>
+        <input type={"radio"} name="skinButtons" onClick={this.click} id={this.props.skin.name}>
+        </input>  
+        <label for={this.props.skin.name} className={"Skin-Button "} style={{backgroundImage: "url(" + skinImage+ ")"}}></label>
+        <div className={"Circle-Select "}>
         </div>
       </div>
     );    
@@ -169,35 +185,60 @@ class Selector extends Component{
     );
   }
 }
+
 class Phone extends Component{
   constructor(props){
     super(props);
+    this.state ={
+      opacity:0,
+      prevSkin:""
+    }
   }
 
   click = ({target:img}) => {
     this.props.onImgLoad(img.offsetHeight);
   }
+  currentLoaded = ({target:e}) => {
+    this.setState({
+      opacity:1,
+    })
+    e.addEventListener("transitionend", (event) => {
+      this.setState({
+        opacity:0,
+        prevSkin:`./skins/${this.props.selectedSkins.fileName}`
+      })
+    }, false);
+  }
 
   render(){
-    if(this.props.showHide=="Active"){
-      var top = this.props.yScroll  - 40;
-    }else{
-      var top = 0;
-    }
+    var top = (this.props.showHide=="Active") ? (this.props.yScroll  - 40) : 0;
+    var curSkin = this.props.selectedSkins.fileName ?`./skins/${this.props.selectedSkins.fileName}`:""
     return(
-      <div className={"Inner-Phone " + this.props.showHide} style={{top:top}} >
-        <img src={full} onLoad={this.click} className="Inner-Phone-Image"></img>
+      <div className={"Inner-Phone " + this.props.showHide} style={{top:top}}>
+        <div className={"Phone-Image-Wrapper"}>
+          <img src={full} onLoad={this.click} className="Inner-Phone-Image"></img>
+          <div className={"Phone-Skin"}>
+            <img className={"Phone-Skin-Image-Prev"} src={this.state.prevSkin} />
+          </div>
+          <div className={"Phone-Skin"}>
+            <img className={"Phone-Skin-Image"} style={{opacity:this.state.opacity}} onLoad={this.currentLoaded} src={curSkin} />
+          </div>
+        </div>
       </div>
     );
   }
 }
 
 class PhoneSidebar extends Component{
+  constructor(props){
+    super(props);
+  }
+
   render(){
     return(
         <div className={"Sidebar "+this.props.showHide} > 
           <div className={"Sidebar-Triangle"}></div>
-          <Catagories skinMapping={skinMapping}/>
+            <Catagories clickSkin={this.props.clickSkin} skinMapping={skinMapping}/>
           <div className={"Catagories-Overlay"}></div>
         </div>
     );
@@ -237,7 +278,8 @@ class App extends Component {
       imgHeight:0,
       showHideSidenav:"Hidden",
       yScroll:0,
-      selectedSkin:null
+      selectedSkin:"",
+      previousSkin:"",
     }
     this.myRef = React.createRef();
   }
@@ -256,8 +298,10 @@ class App extends Component {
   }
 
   clickSkin = (skin) =>{
+    var prevSkin = this.state.selectedSkin
     this.setState({
-      "selectedSkin":skin
+      "selectedSkin":skin,
+      "previousSkin":prevSkin
     });
   }
 
@@ -276,6 +320,7 @@ class App extends Component {
                 yScroll={this.state.yScroll} 
                 onImgLoad={this.onImgLoad}
                 selectedSkins={this.state.selectedSkin}
+                previousSkins={this.state.previousSkin}
               />
               </div>
               <PickASkin toggleSidenav={this.toggleSidenav} />
