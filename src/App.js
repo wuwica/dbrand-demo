@@ -19,7 +19,7 @@ var skinMapping = [
     ]
   },
   {
-   'catagory':"Carbon Fiber",
+   'catagory':"Carbon",
    'skins':[
       {"fileName":"carbon-black.png","name":"Black Carbon"},
       {"fileName":"carbon-gray.png","name":"Gray Carbon"},
@@ -84,8 +84,8 @@ var skinMapping = [
   {
    'catagory':"Wood",
    'skins':[
-      {"fileName":"wood-bamboo.png","name":"Mahogany"},
       {"fileName":"wood-mahogany.png","name":"Bamboo"},
+      {"fileName":"wood-bamboo.png","name":"Mahogany"},
       {"fileName":"wood-zebra.png","name":"Zebra"}
     ]
   },
@@ -136,21 +136,69 @@ class Catagories extends Component{
 class Catagory extends Component{
   constructor(props){
     super(props);
+    this.state={
+      Active:""
+    }
+    this.Ref = React.createRef();
+  }
+
+  catagoryClick = () =>{
+    this.setState({
+      Active:"Active"
+    })
+    console.log(this.ref)
+  }
+
+  overlayClick = () =>{
+    this.setState({
+      Active:""
+    })
+  }
+
+  singleSkinClick = (e) => {
+    this.setState({
+      Active:""
+    });
+    this.props.clickSkin(e);
   }
 
   render(){
+    let catagoryClickFunction;
+
+    if(this.props.skins.skins.length == 1){
+      catagoryClickFunction = this.singleSkinClick;
+    }else{
+      catagoryClickFunction = this.catagoryClick;  
+    }
+    
     return(
       <div className="Catagory-Wrapper">
-        <h5>{this.props.skins.catagory} //</h5>
-        <div className="Catagory">
+        <h5>{this.props.skins.catagory}</h5>
+        <div className="Catagory-Button " ref = {this.myRef}>
+          <Skin_Button 
+            buttonType={"catagoryButton"} 
+            clickSkin={catagoryClickFunction} 
+            skin={this.props.skins.skins[0]} 
+            ButtonID={this.props.skins.skins[0].name + " Catagory"}
+          />
+        </div>
+        <div className="Catagory-Button-Screen-Overlay"></div>
+        <div className={"Catagory " + this.state.Active}>
           <div className={"Catagory-Content"}>
             {this.props.skins.skins.map((skin,i) => {
               return(
-                <Skin_Button key={i} clickSkin={this.props.clickSkin} skin={skin}/>
+                <Skin_Button 
+                  buttonType={"skinButton"}  
+                  key={i} 
+                  clickSkin={this.singleSkinClick} 
+                  skin={skin} 
+                  ButtonID={skin.name}
+                />
               );
             })}
           </div>
         </div>
+
       </div>
     );
   }
@@ -169,22 +217,16 @@ class Skin_Button extends Component{
     const skinImage = require("./tiles/"+this.props.skin.fileName);
     return(
       <div className={"Button-Wrapper"}>
-        <input type={"radio"} name="skinButtons" onClick={this.click} id={this.props.skin.name}>
+        <input type={"radio"} name={this.props.buttonType} onClick={this.click} id={this.props.ButtonID}>
         </input>  
-        <label for={this.props.skin.name} className={"Skin-Button "} style={{backgroundImage: "url(" + skinImage+ ")"}}></label>
-        <div className={"Circle-Select "}>
+        <label htmlFor={this.props.ButtonID} className={"Skin-Button "} style={{backgroundImage: "url(" + skinImage+ ")"}}></label>
+        <div className={"Circle-Select"}>
         </div>
       </div>
     );    
   }
 }
-class Selector extends Component{
-  render(){
-    return(
-      <div></div>
-    );
-  }
-}
+
 
 class Phone extends Component{
   constructor(props){
@@ -210,11 +252,15 @@ class Phone extends Component{
     }, false);
   }
 
+  selectBack =() =>{
+    this.props.toggleSidenav();
+  }
+  
   render(){
     var top = (this.props.showHide=="Active") ? (this.props.yScroll  - 40) : 0;
     var curSkin = this.props.selectedSkins.fileName ?`./skins/${this.props.selectedSkins.fileName}`:""
     return(
-      <div className={"Inner-Phone " + this.props.showHide} style={{top:top}}>
+      <div className={"Inner-Phone " + this.props.showHide} style={{top:top}} onClick={this.selectBack}>
         <div className={"Phone-Image-Wrapper"}>
           <img src={full} onLoad={this.click} className="Inner-Phone-Image"></img>
           <div className={"Phone-Skin"}>
@@ -223,10 +269,32 @@ class Phone extends Component{
           <div className={"Phone-Skin"}>
             <img className={"Phone-Skin-Image"} style={{opacity:this.state.opacity}} onLoad={this.currentLoaded} src={curSkin} />
           </div>
+          <div className="Camera-Area">
+            <div className={"Camera-Skin"}>
+              <img className={"Camera-Skin-Image"} src={"./cameraSkins/carbon-black.png"} />
+            </div>
+            <div className={"Camera-Skin"}>
+              <img className={"Camera-Skin-Image"} src={"./cameraSkins/carbon-black.png"} />
+            </div>
+          </div>
         </div>
       </div>
     );
   }
+}
+
+class PhoneSkinTypeSelector extends Component{
+  render(){
+    return(
+      <div className={"Skin-Type-Selector"}>
+      <input type={"radio"} name="skinType" id={"Back"} onClick={this.click} className="Sidebar-Button"></input>
+      <label htmlFor={"Back"}>Back</label>
+      <input type={"radio"} name="skinType" id={"Camera"} onClick={this.click} className="Sidebar-Button"></input>
+      <label htmlFor={"Camera"}>Camera</label>
+      </div>
+    );
+  }
+
 }
 
 class PhoneSidebar extends Component{
@@ -238,7 +306,8 @@ class PhoneSidebar extends Component{
     return(
         <div className={"Sidebar "+this.props.showHide} > 
           <div className={"Sidebar-Triangle"}></div>
-            <Catagories clickSkin={this.props.clickSkin} skinMapping={skinMapping}/>
+          <PhoneSkinTypeSelector />
+          <Catagories clickSkin={this.props.clickSkin} skinMapping={skinMapping}/>
           <div className={"Catagories-Overlay"}></div>
         </div>
     );
@@ -321,6 +390,7 @@ class App extends Component {
                 onImgLoad={this.onImgLoad}
                 selectedSkins={this.state.selectedSkin}
                 previousSkins={this.state.previousSkin}
+                toggleSidenav={this.toggleSidenav}
               />
               </div>
               <PickASkin toggleSidenav={this.toggleSidenav} />
