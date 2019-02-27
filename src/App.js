@@ -7,15 +7,24 @@ import "./App.css";
 
 var skinMapping = [
   {
-    'catagory':"Matrix",
+    'catagory':"Wood",
     'skins':[
-      {"fileName":"matrix-black.png","name":"Black Matrix"}
-    ]
-  },
+       {"fileName":"wood-mahogany.png","name":"Bamboo"},
+       {"fileName":"wood-bamboo.png","name":"Mahogany"},
+       {"fileName":"wood-zebra.png","name":"Zebra"}
+     ]
+   },
   {
-    'catagory':"Camo",
-    'skins':[
-      {"fileName":"camo-black.png","name":"Black Camo"}
+   'catagory':"True Color",
+   'skins':[
+      {"fileName":"matte-black.png","name":"Matte Black"},
+      {"fileName":"matte-white.png","name":"Matte white"},
+      {"fileName":"tc-blue.png","name":"blue"},
+      {"fileName":"tc-green.png","name":"green"},
+      {"fileName":"tc-yellow.png","name":"yellow"},
+      {"fileName":"tc-orange.png","name":"orange"},
+      {"fileName":"tc-red.png","name":"red"},
+      {"fileName":"tc-purple.png","name":"purple"}
     ]
   },
   {
@@ -40,27 +49,18 @@ var skinMapping = [
     ]
   },
   {
-   'catagory':"Stone",
-   'skins':[
-      {"fileName":"marble-black.png","name":"Black Marble"},
-      {"fileName":"marble-white.png","name":"Red Marble"},
-      {"fileName":"stone-concrete.png","name":"Concrete"}
-    ]
-  },
-  {
-   'catagory':"Matte",
-    'skins':[
-      {"fileName":"matte-black.png","name":"Matte Black"},
-      {"fileName":"matte-white.png","name":"Matte white"}
-    ]
-  },
-  {
    'catagory':"Metal",
    'skins':[
       {"fileName":"metal-hyperblack.png","name":"Hyperblack Titanium"},
       {"fileName":"metal-regular.png","name":"Titanium"},
       {"fileName":"metal-copper.png","name":"Copper"},
       {"fileName":"metal-gold.png","name":"Gold"}
+    ]
+  },
+  {
+    'catagory':"Camo",
+    'skins':[
+      {"fileName":"camo-black.png","name":"Black Camo"}
     ]
   },
   {
@@ -71,22 +71,16 @@ var skinMapping = [
     ]
   },
   {
-   'catagory':"True Color",
+   'catagory':"Stone",
    'skins':[
-      {"fileName":"tc-blue.png","name":"blue"},
-      {"fileName":"tc-green.png","name":"green"},
-      {"fileName":"tc-yellow.png","name":"yellow"},
-      {"fileName":"tc-orange.png","name":"orange"},
-      {"fileName":"tc-red.png","name":"red"},
-      {"fileName":"tc-purple.png","name":"purple"}
+      {"fileName":"marble-black.png","name":"Black Marble"},
+      {"fileName":"marble-white.png","name":"Red Marble"},
+      {"fileName":"stone-concrete.png","name":"Concrete"}
     ]
-  },
-  {
-   'catagory':"Wood",
-   'skins':[
-      {"fileName":"wood-mahogany.png","name":"Bamboo"},
-      {"fileName":"wood-bamboo.png","name":"Mahogany"},
-      {"fileName":"wood-zebra.png","name":"Zebra"}
+  },{
+    'catagory':"Matrix",
+    'skins':[
+      {"fileName":"matrix-black.png","name":"Black Matrix"}
     ]
   },
 ];
@@ -137,16 +131,17 @@ class Catagory extends Component{
   constructor(props){
     super(props);
     this.state={
-      Active:""
+      Active:"",
+      left:0,
+      top:0,
+      selected:""
     }
-    this.Ref = React.createRef();
   }
 
   catagoryClick = () =>{
     this.setState({
       Active:"Active"
     })
-    console.log(this.ref)
   }
 
   overlayClick = () =>{
@@ -157,11 +152,20 @@ class Catagory extends Component{
 
   singleSkinClick = (e) => {
     this.setState({
-      Active:""
+      Active:"",
+      selected:e
     });
     this.props.clickSkin(e);
   }
-
+  positionClick = ({target:e}) =>{
+    var temp = e.offsetParent
+    if (e.className == "Skin-Button "){
+      this.setState({
+        left:temp.offsetLeft,
+        top:temp.offsetTop
+      })
+    }
+  }
   render(){
     let catagoryClickFunction;
 
@@ -172,18 +176,18 @@ class Catagory extends Component{
     }
     
     return(
-      <div className="Catagory-Wrapper">
+      <div className="Catagory-Wrapper" >
         <h5>{this.props.skins.catagory}</h5>
-        <div className="Catagory-Button " ref = {this.myRef}>
+        <div className="Catagory-Button " onClick={this.positionClick}>
           <Skin_Button 
             buttonType={"catagoryButton"} 
             clickSkin={catagoryClickFunction} 
-            skin={this.props.skins.skins[0]} 
+            skin={this.state.selected? this.state.selected : this.props.skins.skins[0]} 
             ButtonID={this.props.skins.skins[0].name + " Catagory"}
           />
         </div>
-        <div className="Catagory-Button-Screen-Overlay"></div>
-        <div className={"Catagory " + this.state.Active}>
+        <div className={"Catagory-Button-Screen-Overlay " + this.state.Active} onClick={this.overlayClick}></div>
+        <div className={"Catagory " + this.state.Active} style={{top:this.state.top+37.5}}>
           <div className={"Catagory-Content"}>
             {this.props.skins.skins.map((skin,i) => {
               return(
@@ -198,7 +202,8 @@ class Catagory extends Component{
             })}
           </div>
         </div>
-
+        <div className={"Catagory-Triangle " + this.state.Active} style={{top:this.state.top+28,left:this.state.left+22.5} }></div>
+        
       </div>
     );
   }
@@ -209,15 +214,16 @@ class Skin_Button extends Component{
     super(props);
   }
   
-  click = () => {
+  click = (e) => {
     this.props.clickSkin(this.props.skin);
+    e.stopPropagation();
   }
 
   render(){
     const skinImage = require("./tiles/"+this.props.skin.fileName);
     return(
       <div className={"Button-Wrapper"}>
-        <input type={"radio"} name={this.props.buttonType} onClick={this.click} id={this.props.ButtonID}>
+        <input type={"radio"} name={this.props.buttonType} onClick={this.click} id={this.props.ButtonID} >
         </input>  
         <label htmlFor={this.props.ButtonID} className={"Skin-Button "} style={{backgroundImage: "url(" + skinImage+ ")"}}></label>
         <div className={"Circle-Select"}>
@@ -284,13 +290,19 @@ class Phone extends Component{
 }
 
 class PhoneSkinTypeSelector extends Component{
+  click = (e) =>{
+    console.log(e.target.value)
+  }
+
   render(){
     return(
       <div className={"Skin-Type-Selector"}>
-      <input type={"radio"} name="skinType" id={"Back"} onClick={this.click} className="Sidebar-Button"></input>
-      <label htmlFor={"Back"}>Back</label>
-      <input type={"radio"} name="skinType" id={"Camera"} onClick={this.click} className="Sidebar-Button"></input>
-      <label htmlFor={"Camera"}>Camera</label>
+        <div className={"Skin-Type-Wrapper"} onChange={event => this.click(event)}>
+          <input type={"radio"} name="skinType" id={"Back"} value="Skin" className="Sidebar-Button" defaultChecked ></input>
+          <label className={"Skin-Type-Button"} htmlFor={"Back"}><div>Back</div></label>
+          <input type={"radio"} name="skinType" id={"Camera"} value="Camera" className="Sidebar-Button"></input>
+          <label className={"Skin-Type-Button"} htmlFor={"Camera"}><div>Camera</div></label>
+        </div>
       </div>
     );
   }
@@ -305,7 +317,7 @@ class PhoneSidebar extends Component{
   render(){
     return(
         <div className={"Sidebar "+this.props.showHide} > 
-          <div className={"Sidebar-Triangle"}></div>
+          <div className={"Sidebar-Triangle "+this.props.showHide}></div>
           <PhoneSkinTypeSelector />
           <Catagories clickSkin={this.props.clickSkin} skinMapping={skinMapping}/>
           <div className={"Catagories-Overlay"}></div>
