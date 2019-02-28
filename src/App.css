@@ -132,9 +132,9 @@ html body{
 .Skin-Catagories{
   position: absolute;
   right: 15px;
-  bottom: 50px;
+  bottom: 70px;
   width:130%;
-  height: 40%;
+  height: 37%;
   -ms-overflow-style: none;
 }
 
@@ -197,7 +197,7 @@ html body{
   text-align: center;
 }
 .Skin-Type-Wrapper{
-  border:2px solid #dbdbdb;
+  border: 2px solid #dbdbdb;
   padding: auto;
   display: inline-block;
 }
@@ -313,6 +313,28 @@ input[type="radio"]:checked ~ .Circle-Select {
 .Product-Options{
   padding: 1.2em 8%;
   background: #222222;
+}
+
+.Add-Cart-Button{
+  position: absolute;
+  bottom: 0;
+  right: 30px;
+  bottom: 18px;
+  width: 160px;
+  border: 2px solid #dbdbdb;
+}
+
+.Add-Cart-Button .Button{
+  font-size: .9em;
+  font-weight: 100;
+  background: #000000;
+  color: #ffbb00;
+}
+.Add-Cart-Button .Button:hover{
+  background: #ffbb00;
+  font-weight: 700;
+  cursor: pointer;
+  color: #000000;
 }
 
 .Button{
@@ -531,3 +553,35 @@ input[type="radio"]:checked ~ .Circle-Select {
   opacity: .5;
   z-index: 2;
 }
+
+@media(max-width: 767px) {
+  .Phone-Base{
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  
+  .Sidebar-Triangle{
+    position: absolute;
+    left:0;
+    content: "";
+    border: 0;
+    transform-origin: 0 0;
+    transform: rotate(0deg) skewX(-0deg);
+    background: #ffbb00;
+    padding-bottom: 100%;
+    height: 100%;
+    width: 600px;
+  }
+
+  .Sidebar-Triangle.Active{
+    left:-0px;
+    transform: rotate(5deg) skewX(-6deg);
+  }
+}
+
+/* 
+  ##Device = Most of the Smartphones Mobiles (Portrait)
+  ##Screen = B/w 320px to 479px
+*/

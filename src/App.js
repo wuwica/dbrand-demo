@@ -332,11 +332,12 @@ class PhoneSidebar extends Component{
     super(props);
   }
 
-  render(){
+  render(){//look into making the "button" more generic
     return(
         <div className={"Sidebar "+this.props.showHide} > 
           <div className={"Sidebar-Triangle "+this.props.showHide}></div>
           <PhoneSkinTypeSelector changeSkinType={this.props.changeSkinType}/>
+          <AddToCartButton toggleSidenav={this.props.toggleSidenav}/>
           <Catagories clickSkin={this.props.clickSkin} skinMapping={skinMapping}/>
           <div className={"Catagories-Overlay"}></div>
         </div>
@@ -344,7 +345,22 @@ class PhoneSidebar extends Component{
   }
 }
 
-class PickASkin extends Component{
+class AddToCartButton extends Component{//TODO: Make Buttons More Generic
+  constructor(props){
+    super(props);
+  }
+  click = () => {
+    this.props.toggleSidenav();
+  }
+  render(){
+    return(
+      <div className={"Add-Cart-Button"}>
+        <div onClick={this.click} className="Button">Add To Cart</div>
+      </div>
+    );
+  }
+}
+class PickASkin extends Component{ //TODO: make buttons more generic These componenets can be combined
   click = () => {
     this.props.toggleSidenav();
   }
@@ -427,7 +443,7 @@ class App extends Component {
       <div className="Phone-Border">
         <div className="Phone-Base">
           <div className="Phone-Wrapper">
-            <PhoneSidebar clickSkin = {this.clickSkin} changeSkinType={this.changeSkinType} showHide={this.state.showHideSidenav}/>   
+            <PhoneSidebar  toggleSidenav={this.toggleSidenav} clickSkin = {this.clickSkin} changeSkinType={this.changeSkinType} showHide={this.state.showHideSidenav}/>   
             <div className="App" id="app" ref={this.myRef}>
               <L_Header />
               <Title />
