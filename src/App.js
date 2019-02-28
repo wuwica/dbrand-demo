@@ -238,22 +238,37 @@ class Phone extends Component{
   constructor(props){
     super(props);
     this.state ={
-      opacity:0,
-      prevSkin:""
+      backOpacity:0,
+      cameraOpacity:0,
+      prevBackSkin:"",
+      prevCameraSkin:""
     }
   }
 
-  click = ({target:img}) => {
+  loadImg = ({target:img}) => {
     this.props.onImgLoad(img.offsetHeight);
   }
-  currentLoaded = ({target:e}) => {
+
+  currentBackLoaded = ({target:e}) => {
     this.setState({
-      opacity:1,
+      backOpacity:1,
     })
     e.addEventListener("transitionend", (event) => {
       this.setState({
-        opacity:0,
-        prevSkin:`./skins/${this.props.selectedSkins.fileName}`
+        backOpacity:0,
+        prevBackSkin:`./skins/${this.props.selectedSkins["Back"].fileName}`
+      })
+    }, false);
+  }
+
+  currentCameraLoaded = ({target:e}) => {
+    this.setState({
+      cameraOpacity:1,
+    })
+    e.addEventListener("transitionend", (event) => {
+      this.setState({
+        cameraOpacity:0,
+        prevCameraSkin:`./cameraSkins/${this.props.selectedSkins["Camera"].fileName}`
       })
     }, false);
   }
@@ -263,24 +278,26 @@ class Phone extends Component{
   }
   
   render(){
+    //figure out why it's triggering 3 times every change for some reason.
     var top = (this.props.showHide=="Active") ? (this.props.yScroll  - 40) : 0;
-    var curSkin = this.props.selectedSkins.fileName ?`./skins/${this.props.selectedSkins.fileName}`:""
+    var curBackSkin = this.props.selectedSkins["Back"].fileName ?`./skins/${this.props.selectedSkins["Back"].fileName}`:""
+    var curCameraSkin = this.props.selectedSkins["Camera"].fileName ?`./cameraSkins/${this.props.selectedSkins["Camera"].fileName}`:""
     return(
       <div className={"Inner-Phone " + this.props.showHide} style={{top:top}} onClick={this.selectBack}>
         <div className={"Phone-Image-Wrapper"}>
-          <img src={full} onLoad={this.click} className="Inner-Phone-Image"></img>
+          <img src={full} onLoad={this.loadImg} className="Inner-Phone-Image"></img>
           <div className={"Phone-Skin"}>
-            <img className={"Phone-Skin-Image-Prev"} src={this.state.prevSkin} />
+            <img className={"Phone-Skin-Image-Prev"} src={this.state.prevBackSkin} />
           </div>
           <div className={"Phone-Skin"}>
-            <img className={"Phone-Skin-Image"} style={{opacity:this.state.opacity}} onLoad={this.currentLoaded} src={curSkin} />
+            <img className={"Phone-Skin-Image"} style={{opacity:this.state.backOpacity}} onLoad={this.currentBackLoaded} src={curBackSkin} />
           </div>
           <div className="Camera-Area">
             <div className={"Camera-Skin"}>
-              <img className={"Camera-Skin-Image"} src={"./cameraSkins/carbon-black.png"} />
+              <img className={"Camera-Skin-Image-Prev"} src={this.state.prevCameraSkin} />
             </div>
             <div className={"Camera-Skin"}>
-              <img className={"Camera-Skin-Image"} src={"./cameraSkins/carbon-black.png"} />
+              <img className={"Camera-Skin-Image"}  style={{opacity:this.state.cameraOpacity}} onLoad={this.currentCameraLoaded} src={curCameraSkin} />
             </div>
           </div>
         </div>
@@ -291,14 +308,15 @@ class Phone extends Component{
 
 class PhoneSkinTypeSelector extends Component{
   click = (e) =>{
-    console.log(e.target.value)
+    this.props.changeSkinType(e.target.value);
   }
 
   render(){
     return(
-      <div className={"Skin-Type-Selector"}>
+       <div className={"Skin-Type-Selector"}>
+        <div className="Label"><span>Coverage</span></div>
         <div className={"Skin-Type-Wrapper"} onChange={event => this.click(event)}>
-          <input type={"radio"} name="skinType" id={"Back"} value="Skin" className="Sidebar-Button" defaultChecked ></input>
+          <input type={"radio"} name="skinType" id={"Back"} value="Back" className="Sidebar-Button" defaultChecked ></input>
           <label className={"Skin-Type-Button"} htmlFor={"Back"}><div>Back</div></label>
           <input type={"radio"} name="skinType" id={"Camera"} value="Camera" className="Sidebar-Button"></input>
           <label className={"Skin-Type-Button"} htmlFor={"Camera"}><div>Camera</div></label>
@@ -318,7 +336,7 @@ class PhoneSidebar extends Component{
     return(
         <div className={"Sidebar "+this.props.showHide} > 
           <div className={"Sidebar-Triangle "+this.props.showHide}></div>
-          <PhoneSkinTypeSelector />
+          <PhoneSkinTypeSelector changeSkinType={this.props.changeSkinType}/>
           <Catagories clickSkin={this.props.clickSkin} skinMapping={skinMapping}/>
           <div className={"Catagories-Overlay"}></div>
         </div>
@@ -359,8 +377,11 @@ class App extends Component {
       imgHeight:0,
       showHideSidenav:"Hidden",
       yScroll:0,
-      selectedSkin:"",
-      previousSkin:"",
+      selectedBackSkin:"",
+      previousBackSkin:"",
+      selectedCameraSkin:"",
+      previousCameraSkin:"",
+      skinType:"Back",
     }
     this.myRef = React.createRef();
   }
@@ -377,13 +398,28 @@ class App extends Component {
       "yScroll":y
     });
   }
+  changeSkinType = (type) => { 
+    if(this.state.skinType != type){
+      this.setState({
+        skinType:type
+      });
+    }
+  }
 
   clickSkin = (skin) =>{
-    var prevSkin = this.state.selectedSkin
-    this.setState({
-      "selectedSkin":skin,
-      "previousSkin":prevSkin
-    });
+    if(this.state.skinType == "Back"){
+      var prevSkin = this.state.selectedSkin
+      this.setState({
+        "selectedBackSkin":skin,
+        "previousBackSkin":prevSkin
+      });
+    }else if (this.state.skinType == "Camera"){
+      var prevSkin = this.state.selectedSkin
+      this.setState({
+        "selectedCameraSkin":skin,
+        "previousCameraSkin":prevSkin
+      });
+    }
   }
 
   render() {
@@ -391,7 +427,7 @@ class App extends Component {
       <div className="Phone-Border">
         <div className="Phone-Base">
           <div className="Phone-Wrapper">
-            <PhoneSidebar clickSkin = {this.clickSkin} showHide={this.state.showHideSidenav}/>   
+            <PhoneSidebar clickSkin = {this.clickSkin} changeSkinType={this.changeSkinType} showHide={this.state.showHideSidenav}/>   
             <div className="App" id="app" ref={this.myRef}>
               <L_Header />
               <Title />
@@ -400,8 +436,9 @@ class App extends Component {
                 showHide={this.state.showHideSidenav} 
                 yScroll={this.state.yScroll} 
                 onImgLoad={this.onImgLoad}
-                selectedSkins={this.state.selectedSkin}
-                previousSkins={this.state.previousSkin}
+                selectedSkins={{"Back":this.state.selectedBackSkin,"Camera":this.state.selectedCameraSkin}}
+                previousSkins={{"Back":this.state.previousBackSkin,"Camera":this.state.previousCameraSkin}}
+                skinType={this.state.skinType}
                 toggleSidenav={this.toggleSidenav}
               />
               </div>
