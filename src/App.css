@@ -561,7 +561,9 @@ input[type="radio"]:checked ~ .Circle-Select {
     border: 0;
   }
 
-  
+  .Sidebar{
+    height: 100vh;
+  }  
   .Sidebar-Triangle{
     position: absolute;
     left:0;
